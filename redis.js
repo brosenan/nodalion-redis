@@ -2,7 +2,7 @@
 var $S = require('suspend'), $R = $S.resume;
 var Redis = require('ioredis');
 
-var nodalion = require('./nodalion.js');
+var nodalion = require('nodalion');
 
 var ns = nodalion.namespace('/nodalion', ['void']);
 
@@ -13,7 +13,7 @@ exports.db = function(options) {
 };
 
 ns._register('kvsSet', function(key, value) {
-    return $S.async(function*() {
+    return $S.callback(function*() {
 	redis.set(key, value);
 	return ns.void();
     });
@@ -28,14 +28,14 @@ ns._register('kvsSetWithTTL', function(key, value, ttl) {
 		cb(err);
 	    });
     }
-    return $S.async(function*() {
+    return $S.callback(function*() {
 	yield trans($R());
 	return ns.void();
     });
 });
 
 ns._register('kvsGet', function(key) {
-    return $S.async(function*() {
+    return $S.callback(function*() {
 	return (yield redis.get(key)) || '';
     });
 });

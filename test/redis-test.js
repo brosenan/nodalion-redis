@@ -4,24 +4,19 @@ var $S = require('suspend'), $R = $S.resume, $T = function(gen) { return functio
 
 var Redis = require('ioredis');
 var nodalionRedis = require('../redis.js');
-var nodalion = require('../nodalion.js');
+var nodalion = require('nodalion');
 var ns = nodalion.namespace('/nodalion', ['kvsGet', 'kvsSet', 'kvsSetWithTTL', 'testKVS1', 'testKVS2']);
 
-var cedParser = require('../cedParser.js');
-
-var parser = new cedParser.CedParser();
-
 var doTask = function(term, cb) {
-    var task = parser.parse(term.toString()).meaning();
-    task(cb);
+    term.meaning()(cb);
 };
 
-var n = new nodalion('/tmp/mongo-ced.log');
-nodalionRedis.db({showFriendlyErrorStack: true});
+var n = new nodalion(nodalion.__dirname + '/prolog/cedalion.pl', '/tmp/mongo-ced.log');
+nodalionRedis.db({showFriendlyErrorStack: true, host: 'redis'});
 
-describe.skip('ioredis', function(){
+describe('ioredis', function(){
     it('should set and then get a value', $T(function*(){
-	var redis = new Redis({ showFriendlyErrorStack: true });
+	var redis = new Redis({ showFriendlyErrorStack: true, host: 'redis' });
 	redis.set('foo', 'bar');
 	function myGet(key, cb) {
 	    redis.get(key, function(err, value) {
@@ -34,12 +29,12 @@ describe.skip('ioredis', function(){
 });
 
 
-describe.skip('nodalionRedis', function(){
+describe('nodalionRedis', function(){
     describe('.db(options)', function(){
 	it('should define a database based on ioredis options', function(){
 	    nodalionRedis.db({showFriendlyErrorStack: true,
 			      port: 6379,
-			      host: '127.0.0.1'});
+			      host: 'redis'});
 	});
     });
 

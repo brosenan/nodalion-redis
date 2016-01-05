@@ -1,0 +1,37 @@
+{
+  "name": "nodalion-redis",
+  "version": "1.0.0",
+  "description": "A redis driver for nodalion",
+  "main": "redis.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "docker run -i --link=redis -v $PWD:/project brosenan/nodalion npm run-script test-in-container",
+    "test-in-container": "./node_modules/mocha/bin/mocha -C -R dot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brosenan/nodalion-redis.git"
+  },
+  "keywords": [
+    "redis",
+    "nodalion",
+    "cedalion",
+    "nosql"
+  ],
+  "author": "Boaz Rosenan <brosenan@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brosenan/nodalion-redis/issues"
+  },
+  "homepage": "https://github.com/brosenan/nodalion-redis#readme",
+  "devDependencies": {
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "ioredis": "^1.14.0",
+    "nodalion": "^1.0.6",
+    "suspend": "^0.7.0"
+  }
+}
